@@ -185,8 +185,8 @@ library(tidyverse)</code></pre>
 <p><strong>1.A test is graded from 0 to 50, with an average score of 35 and a standard deviation of 10. For comparison to other tests, it would be convenient to rescale to a mean of 100 and standard deviation of 15.</strong></p>
 <p><strong>a) How can the scores be linearly transformed to have this new mean and standard deviation?</strong></p>
 <p>We know that the standard deviation of the rescaled grades should be <span class="math inline">\(b = \sigma_1 / \sigma_2 = 15/10 = 1.5\)</span> times larger than the original one. This means that we need to multiply the original grades by this factor and add a constant that makes the rescaled grades mean equal to the target mean of 100.</p>
-<p>In other words, we should solve the equation: <span class="math display">\[ \mu_2 = a + b \times \mu_1  \]</span> $ 100 = a + 1.5 35 $ Therefore $ a =  1.9 $</p>
-<p>The transformation should then be equal to $ y = 1.9 + 1.5 x $ where x is the original vector of grades and y the rescaled one.</p>
+<p>In other words, we should solve the equation: <span class="math display">\[ \mu_2 = a + b \times \mu_1  \]</span> $ 100 = a + 1.5 35 $ Therefore $ a = 100 - 1.535 47.5 $</p>
+<p>The transformation should then be equal to $ y = 47.5 + 1.5 x $ where x is the original vector of grades and y the rescaled one.</p>
 <p>We can try this using simulated data.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
@@ -308,9 +308,42 @@ library(tidyverse)</code></pre>
 [1000] 19.6134367</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ3JhZGVzLiAlPiUgbWVhbigpICU+JSByb3VuZCgwKVxuYGBgIn0= -->
+<pre class="r"><code>grades. %&gt;% mean() %&gt;% round(0)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDM1XG4ifQ== -->
+<pre><code>[1] 35</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ3JhZGVzLiAlPiUgc2QoKSAlPiUgcm91bmQoMClcbmBgYCJ9 -->
+<pre class="r"><code>grades. %&gt;% sd() %&gt;% round(0)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDEwXG4ifQ== -->
+<pre><code>[1] 10</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzYy5ncmFkZXMuICU+JSBtZWFuKCkgJT4lIHJvdW5kKDApXG5cbmBgYCJ9 -->
+<pre class="r"><code>resc.grades. %&gt;% mean() %&gt;% round(0)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDEwMFxuIn0= -->
+<pre><code>[1] 100</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzYy5ncmFkZXMuICU+JSBzZCgpICU+JSByb3VuZCgwKVxuYGBgIn0= -->
+<pre class="r"><code>resc.grades. %&gt;% sd() %&gt;% round(0)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDE1XG4ifQ== -->
+<pre><code>[1] 15</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlNvbHV0aW9ucyB0byBleGVyY2lzZXMgaW4gRGF0YSBBbmFseXNpcyBVc2luZyBSZWdyZXNzaW9uIGFuZCBNdWx0aWxldmVsL0hpZXJhcmNoaWNhbCBNb2RlbHMgYnkgR2VsbWFuIGFuZCBIaWxsICgyMDA2KSINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmBgYHtyLCB3YXJuaW5nPUZBTFNFLCBtZXNzYWdlPUZBTFNFfQ0KDQpsaWJyYXJ5KG1hZ3JpdHRyKQ0KbGlicmFyeSh0aWR5dmVyc2UpDQoNCmBgYA0KDQoNCiMgQ2hhcHRlciAyDQoNCioqMS5BIHRlc3QgaXMgZ3JhZGVkIGZyb20gMCB0byA1MCwgd2l0aCBhbiBhdmVyYWdlIHNjb3JlIG9mIDM1IGFuZCBhIHN0YW5kYXJkIGRldmlhdGlvbiBvZiAxMC4gRm9yIGNvbXBhcmlzb24gdG8gb3RoZXIgdGVzdHMsIGl0IHdvdWxkIGJlIGNvbnZlbmllbnQgdG8gcmVzY2FsZSB0byBhIG1lYW4gb2YgMTAwIGFuZCBzdGFuZGFyZCBkZXZpYXRpb24gb2YgMTUuKioNCg0KKiphKSBIb3cgY2FuIHRoZSBzY29yZXMgYmUgbGluZWFybHkgdHJhbnNmb3JtZWQgdG8gaGF2ZSB0aGlzIG5ldyBtZWFuIGFuZCBzdGFuZGFyZCBkZXZpYXRpb24/KioNCg0KV2Uga25vdyB0aGF0IHRoZSBzdGFuZGFyZCBkZXZpYXRpb24gb2YgdGhlIHJlc2NhbGVkIGdyYWRlcyBzaG91bGQgYmUgJGIgPSBcc2lnbWFfMSAvIFxzaWdtYV8yID0gMTUvMTAgPSAxLjUkIHRpbWVzIGxhcmdlciB0aGFuIHRoZSBvcmlnaW5hbCBvbmUuIFRoaXMgbWVhbnMgdGhhdCB3ZSBuZWVkIHRvIG11bHRpcGx5IHRoZSBvcmlnaW5hbCBncmFkZXMgYnkgdGhpcyBmYWN0b3IgYW5kIGFkZCBhIGNvbnN0YW50IHRoYXQgbWFrZXMgdGhlIHJlc2NhbGVkIGdyYWRlcyBtZWFuIGVxdWFsIHRvIHRoZSB0YXJnZXQgbWVhbiBvZiAxMDAuIA0KDQpJbiBvdGhlciB3b3Jkcywgd2Ugc2hvdWxkIHNvbHZlIHRoZSBlcXVhdGlvbjogDQokJCBcbXVfMiA9IGEgKyBiIFx0aW1lcyBcbXVfMSAgJCQNCiQgMTAwID0gYSArIDEuNSBcdGltZXMgMzUgJCBUaGVyZWZvcmUgJCBhID0gXGZyYWN7MTAwfXsxLjVcdGltZXMgMzV9IFxhcHByb3ggMS45ICQNCg0KVGhlIHRyYW5zZm9ybWF0aW9uIHNob3VsZCB0aGVuIGJlIGVxdWFsIHRvICQgeSA9IDEuOSArIDEuNSB4ICQgd2hlcmUgeCBpcyB0aGUgb3JpZ2luYWwgdmVjdG9yIG9mIGdyYWRlcyBhbmQgeSB0aGUgcmVzY2FsZWQgb25lLg0KDQpXZSBjYW4gdHJ5IHRoaXMgdXNpbmcgc2ltdWxhdGVkIGRhdGEuDQpgYGB7ciwgd2FybmluZz1GQUxTRSwgbWVzc2FnZT1GQUxTRX0NCg0Kc2V0LnNlZWQoNCkNCg0KZ3JhZGVzLiA8LSBybm9ybSgyMDAwLCBtZWFuID0gMzUsIHNkID0gMTApDQoNCmBgYA0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlNvbHV0aW9ucyB0byBleGVyY2lzZXMgaW4gRGF0YSBBbmFseXNpcyBVc2luZyBSZWdyZXNzaW9uIGFuZCBNdWx0aWxldmVsL0hpZXJhcmNoaWNhbCBNb2RlbHMgYnkgR2VsbWFuIGFuZCBIaWxsICgyMDA2KSINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmBgYHtyLCB3YXJuaW5nPUZBTFNFLCBtZXNzYWdlPUZBTFNFfQ0KDQpsaWJyYXJ5KG1hZ3JpdHRyKQ0KbGlicmFyeSh0aWR5dmVyc2UpDQoNCmBgYA0KDQoNCiMgQ2hhcHRlciAyDQoNCioqMS5BIHRlc3QgaXMgZ3JhZGVkIGZyb20gMCB0byA1MCwgd2l0aCBhbiBhdmVyYWdlIHNjb3JlIG9mIDM1IGFuZCBhIHN0YW5kYXJkIGRldmlhdGlvbiBvZiAxMC4gRm9yIGNvbXBhcmlzb24gdG8gb3RoZXIgdGVzdHMsIGl0IHdvdWxkIGJlIGNvbnZlbmllbnQgdG8gcmVzY2FsZSB0byBhIG1lYW4gb2YgMTAwIGFuZCBzdGFuZGFyZCBkZXZpYXRpb24gb2YgMTUuKioNCg0KKiphKSBIb3cgY2FuIHRoZSBzY29yZXMgYmUgbGluZWFybHkgdHJhbnNmb3JtZWQgdG8gaGF2ZSB0aGlzIG5ldyBtZWFuIGFuZCBzdGFuZGFyZCBkZXZpYXRpb24/KioNCg0KV2Uga25vdyB0aGF0IHRoZSBzdGFuZGFyZCBkZXZpYXRpb24gb2YgdGhlIHJlc2NhbGVkIGdyYWRlcyBzaG91bGQgYmUgJGIgPSBcc2lnbWFfMSAvIFxzaWdtYV8yID0gMTUvMTAgPSAxLjUkIHRpbWVzIGxhcmdlciB0aGFuIHRoZSBvcmlnaW5hbCBvbmUuIFRoaXMgbWVhbnMgdGhhdCB3ZSBuZWVkIHRvIG11bHRpcGx5IHRoZSBvcmlnaW5hbCBncmFkZXMgYnkgdGhpcyBmYWN0b3IgYW5kIGFkZCBhIGNvbnN0YW50IHRoYXQgbWFrZXMgdGhlIHJlc2NhbGVkIGdyYWRlcyBtZWFuIGVxdWFsIHRvIHRoZSB0YXJnZXQgbWVhbiBvZiAxMDAuIA0KDQpJbiBvdGhlciB3b3Jkcywgd2Ugc2hvdWxkIHNvbHZlIHRoZSBlcXVhdGlvbjogDQokJCBcbXVfMiA9IGEgKyBiIFx0aW1lcyBcbXVfMSAgJCQNCiQgMTAwID0gYSArIDEuNSBcdGltZXMgMzUgJCBUaGVyZWZvcmUgJCBhID0gMTAwIC0gMS41XHRpbWVzIDM1IFxhcHByb3ggNDcuNSAkDQoNClRoZSB0cmFuc2Zvcm1hdGlvbiBzaG91bGQgdGhlbiBiZSBlcXVhbCB0byAkIHkgPSA0Ny41ICsgMS41IHggJCB3aGVyZSB4IGlzIHRoZSBvcmlnaW5hbCB2ZWN0b3Igb2YgZ3JhZGVzIGFuZCB5IHRoZSByZXNjYWxlZCBvbmUuDQoNCldlIGNhbiB0cnkgdGhpcyB1c2luZyBzaW11bGF0ZWQgZGF0YS4NCmBgYHtyLCB3YXJuaW5nPUZBTFNFLCBtZXNzYWdlPUZBTFNFfQ0KDQpzZXQuc2VlZCg0KQ0KDQpncmFkZXMuIDwtIHJub3JtKDIwMDAsIG1lYW4gPSAzNSwgc2QgPSAxMCkNCg0KYGBgDQoNCg0KYGBge3IsIHdhcm5pbmc9RkFMU0UsIG1lc3NhZ2U9RkFMU0V9DQoNCmdyYWRlcy4gJT4lIG1lYW4oKSAlPiUgcm91bmQoMCkNCg0KZ3JhZGVzLiAlPiUgc2QoKSAlPiUgcm91bmQoMCkNCg0KYGBgDQoNCmBgYHtyLCB3YXJuaW5nPUZBTFNFLCBtZXNzYWdlPUZBTFNFfQ0KDQpyZXNjLmdyYWRlcy4gPC0gZ3JhZGVzLiAqIDE1LzEwICsgKDEwMC1tZWFuKGdyYWRlcy4pKjEuNSkgDQoNCnJlc2MuZ3JhZGVzLiAlPiUgbWVhbigpICU+JSByb3VuZCgwKQ0KDQpyZXNjLmdyYWRlcy4gJT4lIHNkKCkgJT4lIHJvdW5kKDApDQoNCmBgYA0K</div>
 
 
 

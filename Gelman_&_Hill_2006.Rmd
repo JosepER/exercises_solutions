@@ -21,9 +21,9 @@ We know that the standard deviation of the rescaled grades should be $b = \sigma
 
 In other words, we should solve the equation: 
 $$ \mu_2 = a + b \times \mu_1  $$
-$ 100 = a + 1.5 \times 35 $ Therefore $ a = \frac{100}{1.5\times 35} \approx 1.9 $
+$ 100 = a + 1.5 \times 35 $ Therefore $ a = 100 - 1.5\times 35 \approx 47.5 $
 
-The transformation should then be equal to $ y = 1.9 + 1.5 x $ where x is the original vector of grades and y the rescaled one.
+The transformation should then be equal to $ y = 47.5 + 1.5 x $ where x is the original vector of grades and y the rescaled one.
 
 We can try this using simulated data.
 ```{r, warning=FALSE, message=FALSE}
@@ -31,5 +31,24 @@ We can try this using simulated data.
 set.seed(4)
 
 grades. <- rnorm(2000, mean = 35, sd = 10)
+
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+
+grades. %>% mean() %>% round(0)
+
+grades. %>% sd() %>% round(0)
+
+```
+
+```{r, warning=FALSE, message=FALSE}
+
+resc.grades. <- grades. * 15/10 + (100-mean(grades.)*1.5) 
+
+resc.grades. %>% mean() %>% round(0)
+
+resc.grades. %>% sd() %>% round(0)
 
 ```
