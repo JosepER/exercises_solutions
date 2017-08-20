@@ -1,0 +1,35 @@
+---
+title: "Solutions to exercises in Data Analysis Using Regression and Multilevel/Hierarchical Models by Gelman and Hill (2006)"
+output: html_notebook
+---
+
+```{r, warning=FALSE, message=FALSE}
+
+library(magrittr)
+library(tidyverse)
+
+```
+
+
+# Chapter 2
+
+**1.A test is graded from 0 to 50, with an average score of 35 and a standard deviation of 10. For comparison to other tests, it would be convenient to rescale to a mean of 100 and standard deviation of 15.**
+
+**a) How can the scores be linearly transformed to have this new mean and standard deviation?**
+
+We know that the standard deviation of the rescaled grades should be $b = \sigma_1 / \sigma_2 = 15/10 = 1.5$ times larger than the original one. This means that we need to multiply the original grades by this factor and add a constant that makes the rescaled grades mean equal to the target mean of 100. 
+
+In other words, we should solve the equation: 
+$$ \mu_2 = a + b \times \mu_1  $$
+$ 100 = a + 1.5 \times 35 $ Therefore $ a = \frac{100}{1.5\times 35} \approx 1.9 $
+
+The transformation should then be equal to $ y = 1.9 + 1.5 x $ where x is the original vector of grades and y the rescaled one.
+
+We can try this using simulated data.
+```{r, warning=FALSE, message=FALSE}
+
+set.seed(4)
+
+grades. <- rnorm(2000, mean = 35, sd = 10)
+
+```
