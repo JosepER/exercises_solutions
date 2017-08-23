@@ -5,6 +5,9 @@ output: html_notebook
 
 ```{r, warning=FALSE, message=FALSE}
 
+library(rebus)
+library(stringr)
+library(rvest)
 library(magrittr)
 library(tidyverse)
 
@@ -12,6 +15,8 @@ library(tidyverse)
 
 
 # Chapter 2
+
+##Exercise 1
 
 **1.A test is graded from 0 to 50, with an average score of 35 and a standard deviation of 10. For comparison to other tests, it would be convenient to rescale to a mean of 100 and standard deviation of 15.**
 
@@ -26,6 +31,8 @@ $ 100 = a + 1.5 \times 35 $ Therefore $ a = 100 - 1.5\times 35 \approx 47.5 $
 The transformation should then be equal to $ y = 47.5 + 1.5 x $ where x is the original vector of grades and y the rescaled one.
 
 We can try this using simulated data.
+
+Here we create 2000 observations from a normal distribution with mean 35 and standard deviation of 10.
 ```{r, warning=FALSE, message=FALSE}
 
 set.seed(4)
@@ -43,6 +50,7 @@ grades. %>% sd() %>% round(0)
 
 ```
 
+Here we rescale the previous simulated data to give it the desired mean and standard deviation.
 ```{r, warning=FALSE, message=FALSE}
 
 resc.grades. <- grades. * 15/10 + (100-mean(grades.)*1.5) 
@@ -52,3 +60,60 @@ resc.grades. %>% mean() %>% round(0)
 resc.grades. %>% sd() %>% round(0)
 
 ```
+
+**b) There is another linear transformation that also rescales the scores to have mean 100 and standard deviation 15. What is it, and why would you _not_ want to use it for this purpose?** 
+
+Apparently, we could use a negative factor for the linear tranformation.^[https://stats.stackexchange.com/questions/45816/gelman-hill-textbook-question-about-linear-transformation] This would follow the equation: $$y = a -b \times x$$
+
+Therefore it would be $100 = a -1.5 \times 35$ and $a = 152.5$.
+
+Let's see what happens when we use this transformation to rescale our simulated data.
+```{r, warning=FALSE, message=FALSE}
+
+resc.grades.b. <- grades. * (-1.5) + (100-mean(grades.)*(-1.5))
+
+```
+
+```{r, warning=FALSE, message=FALSE}
+
+resc.grades.b. %>% mean() %>% round(0)
+
+resc.grades.b. %>% sd() %>% round(0)
+
+```
+
+The mean and standard deviation seem to be the desired ones. What's wrong then?
+```{r, warning=FALSE, message=FALSE}
+
+data_frame(grades. = grades. %>% round(0), resc.grades. = resc.grades. %>% round(0), resc.grades.b. = resc.grades.b. %>% round(0))
+
+```
+
+Surprise, surprise. The second transformation actually inverted the distribution around the mean. Both _'resc.grades.'_ and _'resc.grades.b.'_ have mean 100. However, using a negative factor in the equation 'mirrored' the observations. I.e. it placed below the mean those that were initially above it and viceversa. This is why we do not want to use it for this purpose. We don't want the student with the best grade to have the lowest score after transformation, do we?
+
+```{r, warning=FALSE, message=FALSE}
+
+rm(grades., resc.grades., resc.grades.b.)
+
+```
+
+
+##Exercise2 
+**The following are the proportions of girl births in Vienna for each month in 1908 and 1909 (out of an average of 3900 births per month):**
+
+```{r, warning=FALSE, message=FALSE}
+
+girls.html. <- html("http://www.stat.columbia.edu/~gelman/arm/examples/girls/births.txt") %>% 
+  html_text()
+
+```
+
+```{r, warning=FALSE, message=FALSE}
+
+girls.html. %>%
+  str_extract_all(pattern = ("\\t." %R% DGT %R% DGT %R% DGT %R% DGT))
+
+```
+
+html_text(girls.html.)
+
