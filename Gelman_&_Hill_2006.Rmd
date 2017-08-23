@@ -1,6 +1,9 @@
 ---
-title: "Solutions to exercises in Data Analysis Using Regression and Multilevel/Hierarchical Models by Gelman and Hill (2006)"
-output: html_notebook
+title: Solutions to exercises in Data Analysis Using Regression and Multilevel/Hierarchical
+  Models by Gelman and Hill (2006)
+output:
+  html_document: default
+  html_notebook: default
 ---
 
 ```{r, warning=FALSE, message=FALSE}
@@ -110,10 +113,112 @@ girls.html. <- html("http://www.stat.columbia.edu/~gelman/arm/examples/girls/bir
 
 ```{r, warning=FALSE, message=FALSE}
 
-girls.html. %>%
-  str_extract_all(pattern = ("\\t." %R% DGT %R% DGT %R% DGT %R% DGT))
+girls.html. %<>%
+  str_match_all(pattern = ("\\t." %R% capture(DGT %R% DGT %R% DGT %R% DGT)))
+
+girls.html. <- girls.html.[[1]][1:24,2]
+
+girls.html. %<>%
+  str_c("0.", .) %>%
+  as.numeric()
 
 ```
 
-html_text(girls.html.)
+**a) Compute the standard deviation of these proportions and compare to the standard deviation that would be expected if the sexes of babies were independently decided with a constant probability over the 24-month period.**
 
+The standard deviation in from births in Vienna is `r sd(girls.html.)`. The standard deviation we would expect from a binomial distribution is with probability equal to the mean of the data is `r sqrt((mean(girls.html.))*(1-mean(girls.html.))/23)`.
+
+```{r, warning=FALSE, message=FALSE}
+
+s. <- sd(girls.html.)
+
+sigma. <- sqrt((mean(girls.html.))*(1-mean(girls.html.))/23)
+
+s.
+
+sigma.
+
+```
+
+**b) The actual and theoretical standard deviations from (a) differ, of course. Is this difference statistically significant? (Hint: under the randomness model, the actual variance should have a distribution with expected value equal to the theoretical variance, and proportional to a χ2 with 23 degrees of freedom.)**
+
+The exercise is basically asking us to check if the difference between the variance observed and the variance we would expect from a binomial distribution is large enough as not to have been caused by sampling error (i.e. by the fact that we only have 24 observations from the distribution behind the data).
+
+Here we want to test the plausibility of the null hypothesis that the observed variance is equal to the theoretical/expected variance: 
+$$H_0: \sigma^2 = \sigma^2_0   $$
+The test statistic is: $$T = (N-1)(s / \sigma_0)^2$$
+
+Where _N_ is the sample size, and $s / \sigma_0$ is the ratio between the sample standard deviation and the theoretical standard deviation.
+
+More information about the test can be found in the following [webpage](http://www.itl.nist.gov/div898/handbook/eda/section3/eda358.htm)
+```{r, warning=FALSE, message=FALSE}
+
+T <- (length(girls.html.)-1)*(s./sigma.)^2
+
+T
+
+```
+
+At a 5% confidence level with a two-tailed test, we would reject the null hypothesis if
+T was smaller than the value in the Chi squared distribution with 23 df.
+
+```{r, warning=FALSE, message=FALSE}
+
+qchisq(0.975, 23, ncp = 0, log = FALSE)
+
+```
+
+Therefore, here we would reject the null hypotheses and retain the alternative hypothesis. I.e. the sample variance is smaller than what we would expect from a binomial distribution.
+
+_Note: As I'm not sure about this answer and I've found different solutions online when double-checking my response, I will compute simulations._
+
+See for example solutions by others: [here](https://github.com/IamGianluca/arm/blob/master/ch2/Ch2_2.ipynb) and [here](https://raw.githubusercontent.com/Fossj117/gelman_hill/master/Ch2/Ch2_ex.md)
+
+```{r, warning=FALSE, message=FALSE}
+
+mean.girls. <- girls.html. %>% mean()
+
+number.simulated.twoyears <- 100000
+
+simulated.months. <- rep(NA, 24*number.simulated.twoyears)
+
+if(!"simulated_months_2_2.RDS" %in% list.files("interim_outputs/")){
+
+for(i in 1:(24*number.simulated.twoyears)){
+
+simulated.months.[i] <- rbinom(3903, 1, mean.girls.) %>% mean()
+
+}
+
+saveRDS(simulated.months., "interim_outputs/simulated_months_2_2.RDS")
+}else{simulated.months. <- readRDS("interim_outputs/simulated_months_2_2.RDS")}
+
+sim.twoyear.number <- rep(1:(length(simulated.months.)/24), 24) %>% sort()
+
+sim.month.number <- rep(1:24, length(simulated.months.)/24)
+
+simulated.twoyears <- data_frame(sim.twoyear.number, sim.month.number, simulated.months.) %>% arrange(sim.twoyear.number, sim.month.number)
+
+simulated.twoyears
+
+```
+
+```{r, warning=FALSE, message=FALSE}
+
+simulated.twoyears.sd <- simulated.twoyears %>%
+  group_by(sim.twoyear.number) %>%
+  summarise(simulated.sd = sd(simulated.months.))
+
+simulated.twoyears.sd
+
+```
+
+```{r, warning=FALSE, message=FALSE}
+
+quantile(simulated.twoyears.sd$simulated.sd, probs = c(0.025, 0.975)) 
+
+s.
+
+```
+
+Compute graph!
